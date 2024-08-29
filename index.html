@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="css/Indexstyle.css">
+    <script src="js/function.js"></script>
+</head>
+
+<body>
+    <div class="main">
+        <div id="signUpWindow" class="signUpTest">
+            <div class="form-box">
+                <h2>Login</h2>
+                <form method="post" onsubmit="submitButtonForReg.disabled=true;">
+                    <div class="input-box">
+                        <span class="icon"><img src="Images/mail.png" alt=""></span>
+                        <input type="text" name="email" id="textInput" required>
+                        <label>Email</label>
+                    </div>
+                    <div class="input-box">
+                        <span class="icon"><img src="Images/lock.png" alt=""></span>
+                        <input type="password" name="password" id="passInput" required>
+                        <label>Password</label>
+                    </div>
+                    <input class="confirm" type="button" value="Confirm" name="submitButtonForReg" onclick="login()">
+                </form><br>
+            </div>
+        </div><br>
+    </div>
+</body>
+
+</html>
