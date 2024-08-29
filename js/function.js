@@ -1,26 +1,25 @@
 async function login() {
-    var usernameOrEmail = document.getElementById('textInput').value;
-    var password = document.getElementById('passInput').value;
-    const url = 'https://learn.reboot01.com/api/auth/signin';
-    const credentials = `${usernameOrEmail}:${password}`;
-    const encodedCredentials = btoa(credentials); // Base64 encode
+    const email = document.getElementById('textInput').value;
+    const password = document.getElementById('passInput').value;
+    const errorDiv = document.getElementById('error');
 
     try {
-        const response = await fetch(url, {
+        const response = await fetch('https://learn.reboot01.com/api/auth/signin', {
             method: 'POST',
             headers: {
-                'Authorization': `Basic ${encodedCredentials}`,
+                'Authorization': 'Basic ' + btoa(email + ':' + password),
                 'Content-Type': 'application/json'
             }
         });
 
-        if (response.ok) {
-            const data = await response.json();
-            console.log(data.token); // Handle the token (e.g., save it)
-        } else {
-            console.error('Login failed:', response.statusText);
+        if (!response.ok) {
+            throw new Error('Invalid credentials');
         }
+
+        const data = await response.json();
+        localStorage.setItem('jwt', data);
+        window.location.href = 'profile.html'; // Redirect to profile page
     } catch (error) {
-        console.error('Error during login:', error);
+        errorDiv.textContent = error.message;
     }
 }
