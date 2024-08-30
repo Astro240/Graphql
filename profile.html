@@ -42,95 +42,103 @@
             <svg id="graph1"></svg>
             <svg id="graph2"></svg>
         </div>
-        
+
     </div>
 
-    <script>
+    <script defer>
+        document.addEventListener('DOMContentLoaded', async () => {
+            await fetchProfile();
+        });
+    
         async function fetchProfile() {
             const token = localStorage.getItem('jwt');
             if (!token) {
                 window.location.href = 'index.html';
                 return;
             }
-
-            const response = await fetch('https://learn.reboot01.com/api/graphql-engine/v1/graphql', {
-                method: 'POST',
-                headers: {
-                    'Authorization': 'Bearer ' + token,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    query: `
-                    {
-                        user {
-                            id
-                            login
+    
+            try {
+                const response = await fetch('https://learn.reboot01.com/api/graphql-engine/v1/graphql', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        query: `
+                        {
+                            user {
+                                id
+                                login
+                            }
+                            transaction {
+                                id
+                                type
+                                amount
+                                objectId
+                                userId
+                                createdAt
+                                path
+                            }
+                            progress {
+                                id
+                                userId
+                                objectId
+                                grade
+                                createdAt
+                                updatedAt
+                                path
+                            }
+                            result {
+                                id
+                                objectId
+                                userId
+                                grade
+                                type
+                                createdAt
+                                updatedAt
+                                path
+                            }
+                            object {
+                                id
+                                name
+                                type
+                                attrs
+                            }
                         }
-                        transaction {
-                            id
-                type
-                amount
-                objectId
-                userId
-                createdAt
-                path
-                        }
-                        progress {
-                            id
-                userId
-                objectId
-                grade
-                createdAt
-                updatedAt
-                path
-                        }
-                        result {
-                            id
-                objectId
-                userId
-                grade
-                type
-                createdAt
-                updatedAt
-                path
-                        }
-                        object {
-                            id
-                name
-                type
-                attrs
-                        }
-                    }
-                    `
-                })
-            });
-
-            const result = await response.json();
-            console.log(result.data)
-            const userInfo = result.data.user;
-            if (userInfo.length === 0){
-                window.location.href = 'index.html';
+                        `
+                    })
+                });
+    
+                const result = await response.json();
+                console.log(result.data);
+                const userInfo = result.data.user;
+                if (!userInfo.length) {
+                    window.location.href = 'index.html';
+                    return;
+                }
+                document.getElementById('userInfo').textContent = `Welcome, ${userInfo[0].login}!`;
+    
+                // Call functions to draw your SVG graphs here
+                drawGraphs(userInfo);
+            } catch (error) {
+                console.error('Error fetching profile:', error);
+                // Handle error (optional)
             }
-            document.getElementById('userInfo').textContent = `ID: ${userInfo[0].id}, Name: ${userInfo[0].login}`;
-
-            // Call functions to draw your SVG graphs here
-            drawGraphs(userInfo);
         }
-
+    
         function drawGraphs(userInfo) {
             const svg1 = document.getElementById('graph1');
             const svg2 = document.getElementById('graph2');
-            // // Sample SVG graph generation code
+            // Sample SVG graph generation code
             // svg1.innerHTML = `<circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" />`;
             // svg2.innerHTML = `<rect width="300" height="100" style="fill:blue;" />`;
         }
-
+    
         function logout() {
             localStorage.removeItem('jwt');
             window.location.href = 'index.html';
         }
-
-        fetchProfile();
     </script>
 </body>
 
