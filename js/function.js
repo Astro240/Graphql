@@ -2,6 +2,7 @@ async function login() {
     const email = document.getElementById('textInput').value;
     const password = document.getElementById('passInput').value;
     const errorDiv = document.getElementById('error');
+    const token = localStorage.getItem('jwt');
 
     try {
         const response = await fetch('https://learn.reboot01.com/api/auth/signin', {

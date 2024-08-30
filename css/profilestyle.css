@@ -38,6 +38,9 @@ body {
       width: 95%;
       margin: 0 0 2% 0;
     }
+    .eachBand{
+        margin-left: 2%;
+    }
     .button {
       padding-left: 20%;
       padding-right: 20%;

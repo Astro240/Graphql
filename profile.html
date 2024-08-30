@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile Page</title>
+    <title>GraphQL</title>
     <link rel="stylesheet" href="css/profilestyle.css">
     <style>
        
@@ -104,14 +104,21 @@
                 });
     
                 const result = await response.json();
-                console.log(result.data);
+                // console.log(result.data);
                 const userInfo = result.data.user;
                 if (!userInfo.length) {
                     window.location.href = 'index.html';
                     return;
                 }
+                var sum =0;
+                for(var i = 0; i <result.data.transaction.length;i++){
+                    if(result.data.transaction[i].type === "xp" && result.data.transaction[i].path.includes("piscine")){
+                    sum += parseInt(result.data.transaction[i].amount)/1000;
+                    }
+                    console.log(result.data.transaction[i]);
+                }
+                console.log(sum)
                 document.getElementById('userInfo').textContent = `Welcome, ${userInfo[0].login}!`;
-                console.log(userInfo.data);
                 // Call functions to draw your SVG graphs here
                 drawGraphs(userInfo);
             } catch (error) {
