@@ -18,13 +18,16 @@
         <center>
         <div class="eachBand1">
 			<h2><div id="userInfo"></div></h2>
+            
 		</div>
 	</center>
 	<div class="eachBand">
-		<center>
-			<svg id="graph1"></svg>
-            <svg id="graph2"></svg>
-		</center>
+        <center>
+            <h3>Audits Ratio</h3>
+        </center>
+			<span id="graph1"></span><span id="audit1" style="padding-left: 10px;"></span><br><br>
+            <span id="graph2"></span><span id="audit2" style="padding-left: 10px;"></span>
+        <h3 id="audits"></h3>
 	</div>
 	<div class="eachBand">
 		<center>
@@ -63,6 +66,9 @@
                             user {
                                 id
                                 login
+                                auditRatio
+                                totalUp
+                                totalDown
                             }
                             transaction {
                                 id
@@ -119,21 +125,46 @@
                 }
                 console.log(sum)
                 document.getElementById('userInfo').textContent = `Welcome, ${userInfo[0].login}!`;
-                // Call functions to draw your SVG graphs here
-                drawGraphs(userInfo);
+                document.getElementById('audits').textContent = userInfo[0].auditRatio.toFixed(1);
+                var upAudit = userInfo[0].totalUp/1000;
+                var downAudit = userInfo[0].totalDown/1000;
+                drawGraphs(userInfo,upAudit,downAudit);
+                var tfUp = false;
+                var tfDown = false;
+                if(upAudit >=1000){
+                    upAudit/=1000;
+                    tfUp=true;
+                }
+                if(downAudit >= 1000){
+                    downAudit/=1000;
+                    tfDown= true;
+                }
+                document.getElementById('audit1').textContent = upAudit.toFixed(1);
+                document.getElementById('audit2').textContent = downAudit.toFixed(1);
+
             } catch (error) {
                 console.error('Error fetching profile:', error);
                 // Handle error (optional)
             }
         }
     
-        function drawGraphs(userInfo) {
+        function drawGraphs(userInfo,auditUp,auditDown) {
             const svg1 = document.getElementById('graph1');
             const svg2 = document.getElementById('graph2');
             // Sample SVG graph generation code
-            // svg1.innerHTML = `<circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" />`;
-            // svg2.innerHTML = `<rect width="300" height="100" style="fill:blue;" />`;
-        }
+            if(auditUp > auditDown){
+            var test = auditDown/auditUp;
+            test = 300 * test;
+            svg1.innerHTML = `<svg height="10" width="300" xmlns="http://www.w3.org/2000/svg" style="border: 1px solid white;border-radius:5px"><line x1="0" y1="10" x2="300" y2="10" style="stroke:orange;stroke-width:200;"/></svg>`;
+            svg2.innerHTML = `<svg height="10" width="300" xmlns="http://www.w3.org/2000/svg" style="border: 1px solid white;border-radius:5px"><line x1="0" y1="10" x2="${test}" y2="10" style="stroke:orange;stroke-width:200;"/></svg>`;
+            }else{
+            var test = auditUp/auditDown;
+            test = 300 * test;
+            svg1.innerHTML = `<svg height="10" width="300" xmlns="http://www.w3.org/2000/svg" style="border: 1px solid white;border-radius:5px"><line x1="0" y1="10" x2="${test}" y2="10" style="stroke:orange;stroke-width:200;"/></svg>`;
+            svg2.innerHTML = `<svg height="10" width="300" xmlns="http://www.w3.org/2000/svg" style="border: 1px solid white;border-radius:5px"><line x1="0" y1="10" x2="300" y2="10" style="stroke:orange;stroke-width:200;"/></svg>`;
+ 
+            }
+        }   
     
         function logout() {
             localStorage.removeItem('jwt');
