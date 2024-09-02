@@ -34,7 +34,6 @@
                 <span id="graph1"></span><span id="audit1" style="padding-left: 10px;"></span><br><br>
                 <span id="graph2"></span><span id="audit2" style="padding-left: 10px;"></span>
                 <h3 id="audits"></h3>
-                <hr>
             </center>
         </div>
         <div class="eachBand">
@@ -169,8 +168,10 @@
                 }
 
                 document.getElementById('userInfo').textContent = `Welcome, ${userInfo[0].login}!`;
-                document.getElementById('audits').textContent = userInfo[0].auditRatio.toFixed(1);
-                document.getElementById('moduleExp').textContent = "Module - " + (data.transaction_aggregate.aggregate.sum.amount / 1000).toFixed(0) + "KB";
+                document.getElementById('audits').textContent = userInfo[0].auditRatio.toFixed(1); 
+                if (data.transaction_aggregate.aggregate.sum.amount != null) {
+                    document.getElementById('moduleExp').textContent = "Module - " + (data.transaction_aggregate.aggregate.sum.amount / 1000).toFixed(0) + "KB";
+                }
                 if (data.js.aggregate.sum.amount != null) {
                     document.getElementById('jsExp').textContent = "JS Piscine - " + (data.js.aggregate.sum.amount / 1000).toFixed(0) + "KB";
                 }
