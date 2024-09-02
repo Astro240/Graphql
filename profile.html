@@ -25,12 +25,17 @@
         </center>
         <div class="eachBand">
             <center>
+                <h2>Experience</h2>
+                <h4><span id="moduleExp"></span></h4>
+                <h4><span id="jsExp"></span></h4>
+                <h4><span id="goExp"></span></h4>
+                <hr>
                 <h3>Audits Ratio</h3>
                 <span id="graph1"></span><span id="audit1" style="padding-left: 10px;"></span><br><br>
                 <span id="graph2"></span><span id="audit2" style="padding-left: 10px;"></span>
-            <h3 id="audits"></h3>
-            <hr>
-        </center>
+                <h3 id="audits"></h3>
+                <hr>
+            </center>
         </div>
         <div class="eachBand">
             <center>
@@ -82,6 +87,49 @@
                                 createdAt
                                 path
                             }
+                            transaction_aggregate(
+                                where: {
+                                _and: [
+                                    { type: { _eq: "xp" } },
+                                    { path: { _like: "/bahrain/bh-module/%" } }
+                                    { path: { _nlike: "/bahrain/bh-module/piscine-js/%"} }
+                                ]
+                                }
+                            ) {
+                                aggregate {
+                                    sum {
+                                        amount
+                                    }
+                                }
+                            }
+                            js:transaction_aggregate(
+                                where: {
+                                _and: [
+                                    { type: { _eq: "xp" } },
+                                    { path: { _like: "/bahrain/bh-module/piscine-js/%" } }
+                                ]
+                                }
+                            ) {
+                                aggregate {
+                                    sum {
+                                        amount
+                                    }
+                                }
+                            }
+                                go:transaction_aggregate(
+                                where: {
+                                _and: [
+                                    { type: { _eq: "xp" } },
+                                    { path: { _like: "/bahrain/bh-piscine/%" } }
+                                ]
+                                }
+                            ) {
+                                aggregate {
+                                    sum {
+                                        amount
+                                    }
+                                }
+                            }       
                             progress {
                                 id
                                 userId
@@ -113,22 +161,22 @@
                 });
 
                 const result = await response.json();
-                // console.log(result.data);
+                const data = result.data;
                 const userInfo = result.data.user;
                 if (!userInfo.length) {
                     window.location.href = 'index.html';
                     return;
                 }
-                var sum = 0;
-                for (var i = 0; i < result.data.transaction.length; i++) {
-                    if (result.data.transaction[i].type === "xp" && result.data.transaction[i].path.includes("piscine")) {
-                        sum += parseInt(result.data.transaction[i].amount) / 1000;
-                    }
-                    console.log(result.data.transaction[i]);
-                }
-                console.log(sum)
+
                 document.getElementById('userInfo').textContent = `Welcome, ${userInfo[0].login}!`;
                 document.getElementById('audits').textContent = userInfo[0].auditRatio.toFixed(1);
+                document.getElementById('moduleExp').textContent = "Module - " + (data.transaction_aggregate.aggregate.sum.amount / 1000).toFixed(0) + "KB";
+                if (data.js.aggregate.sum.amount != null) {
+                    document.getElementById('jsExp').textContent = "JS Piscine - " + (data.js.aggregate.sum.amount / 1000).toFixed(0) + "KB";
+                }
+                if (data.go.aggregate.sum.amount != null) {
+                    document.getElementById('goExp').textContent = "Go Piscine - " + (data.go.aggregate.sum.amount / 1000).toFixed(0) + "KB";
+                }
                 var upAudit = userInfo[0].totalUp / 1000;
                 var downAudit = userInfo[0].totalDown / 1000;
                 drawGraphs(userInfo, upAudit, downAudit);
@@ -143,14 +191,14 @@
                     tfDown = true;
                 }
                 if (tfUp) {
-                    document.getElementById('audit1').textContent = upAudit.toFixed(1);
+                    document.getElementById('audit1').textContent = upAudit.toFixed(1) + " MB";
                 } else {
-                    document.getElementById('audit1').textContent = upAudit.toFixed(0);
+                    document.getElementById('audit1').textContent = upAudit.toFixed(0) + " KB";
                 }
                 if (tfDown) {
-                    document.getElementById('audit2').textContent = downAudit.toFixed(1);
+                    document.getElementById('audit2').textContent = downAudit.toFixed(1) + " MB";
                 } else {
-                    document.getElementById('audit2').textContent = downAudit.toFixed(0);
+                    document.getElementById('audit2').textContent = downAudit.toFixed(0) + " KB";
 
                 }
             } catch (error) {
