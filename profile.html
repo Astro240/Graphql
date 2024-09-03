@@ -20,7 +20,7 @@
                 <h2>
                     <div id="userInfo"></div>
                 </h2>
-
+                
             </div>
         </center>
         <div class="eachBand">
@@ -76,6 +76,7 @@
                                 auditRatio
                                 totalUp
                                 totalDown
+                                attrs
                             }
                             transaction {
                                 id
@@ -128,7 +129,7 @@
                                         amount
                                     }
                                 }
-                            }       
+                            }  
                             progress {
                                 id
                                 userId
@@ -178,6 +179,7 @@
                 if (data.go.aggregate.sum.amount != null) {
                     document.getElementById('goExp').textContent = "Go Piscine - " + (data.go.aggregate.sum.amount / 1000).toFixed(0) + "KB";
                 }
+                // var image = userInfo[0].attrs["id-cardUploadId"];
                 var upAudit = userInfo[0].totalUp / 1000;
                 var downAudit = userInfo[0].totalDown / 1000;
                 drawGraphs(userInfo, upAudit, downAudit);
