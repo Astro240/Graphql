@@ -172,13 +172,25 @@
                 document.getElementById('userInfo').textContent = `Welcome, ${userInfo[0].login}!`;
                 document.getElementById('audits').textContent = userInfo[0].auditRatio.toFixed(1); 
                 if (data.transaction_aggregate.aggregate.sum.amount != null) {
-                    document.getElementById('moduleExp').textContent = "Module - " + (data.transaction_aggregate.aggregate.sum.amount / 1000).toFixed(0) + "KB";
+                    if(data.transaction_aggregate.aggregate.sum.amount / 1000 >= 1000){
+                        document.getElementById('moduleExp').textContent = "Module - " + ((data.transaction_aggregate.aggregate.sum.amount / 1000)/1000).toFixed(1) + "MB";
+                    }else{
+                        document.getElementById('moduleExp').textContent = "Module - " + (data.transaction_aggregate.aggregate.sum.amount / 1000).toFixed(0) + "KB";
+                    }
                 }
                 if (data.js.aggregate.sum.amount != null) {
-                    document.getElementById('jsExp').textContent = "JS Piscine - " + (data.js.aggregate.sum.amount / 1000).toFixed(0) + "KB";
+                    if(data.js.aggregate.sum.amount / 1000 >= 1000){
+                        document.getElementById('jsExp').textContent = "JS Piscine - " + ((data.js.aggregate.sum.amount / 1000)/1000).toFixed(1) + "MB";
+                    }else{
+                        document.getElementById('jsExp').textContent = "JS Piscine - " + (data.js.aggregate.sum.amount / 1000).toFixed(0) + "KB";
+                    }
                 }
                 if (data.go.aggregate.sum.amount != null) {
-                    document.getElementById('goExp').textContent = "Go Piscine - " + (data.go.aggregate.sum.amount / 1000).toFixed(0) + "KB";
+                    if(data.go.aggregate.sum.amount / 1000 >= 1000){
+                        document.getElementById('goExp').textContent = "Go Piscine - " + ((data.go.aggregate.sum.amount / 1000)/1000).toFixed(1) + "MB";
+                    }else{
+                        document.getElementById('goExp').textContent = "Go Piscine - " + (data.go.aggregate.sum.amount / 1000).toFixed(0) + "KB";
+                    }
                 }
                 document.getElementById('name').innerHTML = "Full Name: " + userInfo[0].attrs["firstName"] + " "+ userInfo[0].attrs["lastName"];
                 document.getElementById('email').innerHTML = "E-mail: " + userInfo[0].attrs["email"];
@@ -210,7 +222,8 @@
                 }
             } catch (error) {
                 console.error('Error fetching profile:', error);
-                // Handle error (optional)
+                window.location.href = 'index.html';
+                return;
             }
         }
 
@@ -220,14 +233,14 @@
             // Sample SVG graph generation code
             if (auditUp > auditDown) {
                 var test = auditDown / auditUp;
-                test = 300 * test;
-                svg1.innerHTML = `<svg height="10" width="300" xmlns="http://www.w3.org/2000/svg" style="border: 1px solid white;border-radius:5px"><line x1="0" y1="10" x2="300" y2="10" style="stroke:cyan;stroke-width:200;"/></svg>`;
-                svg2.innerHTML = `<svg height="10" width="300" xmlns="http://www.w3.org/2000/svg" style="border: 1px solid white;border-radius:5px"><line x1="0" y1="10" x2="${test}" y2="10" style="stroke:white;stroke-width:200;"/></svg>`;
+                test = 250 * test;
+                svg1.innerHTML = `<svg height="10" width="250" xmlns="http://www.w3.org/2000/svg" style="border: 1px solid white;border-radius:5px"><line x1="0" y1="10" x2="250" y2="10" style="stroke:cyan;stroke-width:200;"/></svg>`;
+                svg2.innerHTML = `<svg height="10" width="250" xmlns="http://www.w3.org/2000/svg" style="border: 1px solid white;border-radius:5px"><line x1="0" y1="10" x2="${test}" y2="10" style="stroke:white;stroke-width:200;"/></svg>`;
             } else {
                 var test = auditUp / auditDown;
-                test = 300 * test;
-                svg1.innerHTML = `<svg height="10" width="300" xmlns="http://www.w3.org/2000/svg" style="border: 1px solid white;border-radius:5px"><line x1="0" y1="10" x2="${test}" y2="10" style="stroke:white;stroke-width:200;"/></svg>`;
-                svg2.innerHTML = `<svg height="10" width="300" xmlns="http://www.w3.org/2000/svg" style="border: 1px solid white;border-radius:5px"><line x1="0" y1="10" x2="300" y2="10" style="stroke:cyan;stroke-width:200;"/></svg>`;
+                test = 250 * test;
+                svg1.innerHTML = `<svg height="10" width="250" xmlns="http://www.w3.org/2000/svg" style="border: 1px solid white;border-radius:5px"><line x1="0" y1="10" x2="${test}" y2="10" style="stroke:white;stroke-width:200;"/></svg>`;
+                svg2.innerHTML = `<svg height="10" width="250" xmlns="http://www.w3.org/2000/svg" style="border: 1px solid white;border-radius:5px"><line x1="0" y1="10" x2="250" y2="10" style="stroke:cyan;stroke-width:200;"/></svg>`;
 
             }
         }
