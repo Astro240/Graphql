@@ -121,6 +121,14 @@ async function fetchProfile() {
                             name
                         }
                     }
+                    currProgress:progress(
+                        where: { isDone: { _eq: false }, object: { type: { _eq: "project" } } }
+                        limit: 1
+                        ) {
+                        object {
+                            name
+                        }
+                    }
                 }
                 `
             })
@@ -133,8 +141,13 @@ async function fetchProfile() {
             window.location.href = 'index.html';
             return;
         }
+        if(data.currProgress.length){
+            const projectRecents = document.getElementById('currentProjects');
+            const recentProject = document.createElement('div'); // Create a new div for each project
+            recentProject.textContent = data.currProgress[0].object.name; // Set the text
+            projectRecents.appendChild(recentProject); // Append the new div to the container
+        }
         for(var i =0; i <data.recentProj.length;i++){
-            console.log(data.recentProj[i].object.name);
             const projectRecents = document.getElementById('ProjectRecents');
             const recentProject = document.createElement('div'); // Create a new div for each project
             recentProject.textContent = (i + 1) + ". " + data.recentProj[i].object.name; // Set the text
