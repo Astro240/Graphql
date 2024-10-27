@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GraphQL</title>
     <link rel="stylesheet" href="css/Indexstyle.css">
-    <script src="js/function.js"></script>
+    <script src="js/function.js">
+    </script>
 </head>
 
 <body>
@@ -31,6 +32,13 @@
             </div>
         </div><br>
     </div>
+    <script>
+        document.getElementById('passInput').addEventListener('keydown', (e) => {
+            if (e.code === "Enter") {
+                login();
+            }
+        });
+    </script>
 </body>
 
 </html>
