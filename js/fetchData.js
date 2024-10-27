@@ -141,13 +141,13 @@ async function fetchProfile() {
             window.location.href = 'index.html';
             return;
         }
-        if(data.currProgress.length){
+        if (data.currProgress.length) {
             const projectRecents = document.getElementById('currentProjects');
             const recentProject = document.createElement('div'); // Create a new div for each project
             recentProject.textContent = data.currProgress[0].object.name; // Set the text
             projectRecents.appendChild(recentProject); // Append the new div to the container
         }
-        for(var i =0; i <data.recentProj.length;i++){
+        for (var i = 0; i < data.recentProj.length; i++) {
             const projectRecents = document.getElementById('ProjectRecents');
             const recentProject = document.createElement('div'); // Create a new div for each project
             recentProject.textContent = (i + 1) + ". " + data.recentProj[i].object.name; // Set the text
@@ -230,7 +230,7 @@ function drawGraphs(userInfo, auditUp, auditDown) {
     }
 }
 
-function drawSvgRadar(){
+function drawSvgRadar() {
     const data = [5, 3, 4, 2, 1]; // Values for each category (0-5)
     const categories = ['A', 'B', 'C', 'D', 'E'];
     const numCategories = categories.length;
@@ -271,7 +271,7 @@ function drawSvgRadar(){
         const y = radius * (value / maxValue) * Math.sin(angleSlice * i - Math.PI / 2);
         return `${x + radius},${y + radius}`;
     });
-    
+
     svg.append('polygon')
         .attr('points', dataPoints.join(' '))
         .attr('class', 'area');
