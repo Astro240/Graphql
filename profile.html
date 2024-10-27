@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GraphQL</title>
     <link rel="stylesheet" href="css/profilestyle.css">
-    
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="js/fetchData.js">
         
     </script>
@@ -17,7 +17,8 @@
 </head>
 
 <body>
-    <button onclick="logout()">Logout</button>
+    <img src="Images/Screenshot_2024-10-27_163434-removebg-preview.png" id="logo">
+    <button onclick="logout()" id="logoutButton">Logout</button>
     <div class="profile-container">
         <center>
             <div class="eachBand1">
@@ -54,7 +55,8 @@
         </div>
         <div class="eachBand">
             <center>
-
+                <h2>Skills</h2>
+                <svg id="radarChart"></svg>
             </center>
         </div>
     </div>

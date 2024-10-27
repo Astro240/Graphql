@@ -194,16 +194,17 @@ async function fetchProfile() {
             tfDown = true;
         }
         if (tfUp) {
-            document.getElementById('audit1').textContent = upAudit.toFixed(1) + " MB";
+            document.getElementById('audit1').textContent = upAudit.toFixed(2) + " MB";
         } else {
             document.getElementById('audit1').textContent = upAudit.toFixed(0) + " KB";
         }
         if (tfDown) {
-            document.getElementById('audit2').textContent = downAudit.toFixed(1) + " MB";
+            document.getElementById('audit2').textContent = downAudit.toFixed(2) + " MB";
         } else {
             document.getElementById('audit2').textContent = downAudit.toFixed(0) + " KB";
 
         }
+        drawSvgRadar();
     } catch (error) {
         console.error('Error fetching profile:', error);
         window.location.href = 'index.html';
@@ -229,6 +230,60 @@ function drawGraphs(userInfo, auditUp, auditDown) {
     }
 }
 
+function drawSvgRadar(){
+    const data = [5, 3, 4, 2, 1]; // Values for each category (0-5)
+    const categories = ['A', 'B', 'C', 'D', 'E'];
+    const numCategories = categories.length;
+    const maxValue = 5;
+    const radius = 100;
+    const angleSlice = (Math.PI * 2) / numCategories;
+
+    const svg = d3.select('#radarChart');
+
+    // Draw the grid
+    for (let r = 1; r <= maxValue; r++) {
+        const points = [];
+        for (let i = 0; i < numCategories; i++) {
+            const x = radius * (r / maxValue) * Math.cos(angleSlice * i - Math.PI / 2);
+            const y = radius * (r / maxValue) * Math.sin(angleSlice * i - Math.PI / 2);
+            points.push(`${x + radius},${y + radius}`);
+        }
+        svg.append('polygon')
+            .attr('points', points.join(' '))
+            .attr('class', 'grid');
+    }
+
+    // Draw the axes
+    for (let i = 0; i < numCategories; i++) {
+        const x = radius * Math.cos(angleSlice * i - Math.PI / 2);
+        const y = radius * Math.sin(angleSlice * i - Math.PI / 2);
+        svg.append('line')
+            .attr('x1', radius)
+            .attr('y1', radius)
+            .attr('x2', x + radius)
+            .attr('y2', y + radius)
+            .attr('stroke', '#ccc');
+    }
+
+    // Draw the data area
+    const dataPoints = data.map((value, i) => {
+        const x = radius * (value / maxValue) * Math.cos(angleSlice * i - Math.PI / 2);
+        const y = radius * (value / maxValue) * Math.sin(angleSlice * i - Math.PI / 2);
+        return `${x + radius},${y + radius}`;
+    });
+    
+    svg.append('polygon')
+        .attr('points', dataPoints.join(' '))
+        .attr('class', 'area');
+
+    // Draw the data points
+    dataPoints.forEach(point => {
+        svg.append('circle')
+            .attr('cx', point.split(',')[0])
+            .attr('cy', point.split(',')[1])
+            .attr('class', 'point');
+    });
+}
 function logout() {
     localStorage.removeItem('jwt');
     window.location.href = 'index.html';
