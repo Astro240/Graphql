@@ -259,7 +259,7 @@ function drawSvgRadar(nameData, Pointdata) {
     const angleSlice = (Math.PI * 2) / numCategories;
 
     const svg = d3.select('#radarChart');
-    svg.attr('viewBox','0 -20 200 250');
+    svg.attr('viewBox', '0 -20 200 250');
     for (let r = 1; r <= maxValue; r++) {
         const points = [];
         for (let i = 0; i < numCategories; i++) {
