@@ -259,7 +259,7 @@ function drawSvgRadar(nameData, Pointdata) {
     const angleSlice = (Math.PI * 2) / numCategories;
 
     const svg = d3.select('#radarChart');
-
+    svg.attr('viewBox','0 -20 200 250');
     for (let r = 1; r <= maxValue; r++) {
         const points = [];
         for (let i = 0; i < numCategories; i++) {
@@ -293,12 +293,24 @@ function drawSvgRadar(nameData, Pointdata) {
         .attr('points', dataPoints.join(' '))
         .attr('class', 'area');
 
-    // Draw the data points
     dataPoints.forEach(point => {
         svg.append('circle')
             .attr('cx', point.split(',')[0])
             .attr('cy', point.split(',')[1])
             .attr('class', 'point');
+    });
+
+    categories.forEach((category, i) => {
+        const labelX = radius * 1.1 * Math.cos(angleSlice * i - Math.PI / 2);
+        const labelY = radius * 1.1 * Math.sin(angleSlice * i - Math.PI / 2);
+        svg.append('text')
+            .attr('x', labelX + radius)
+            .attr('y', labelY + radius)
+            .attr('class', 'label')
+            .text(category)
+            .attr('fill', 'white')
+            .attr('text-anchor', 'middle')
+            .attr('dominant-baseline', 'middle');
     });
 }
 function logout() {
