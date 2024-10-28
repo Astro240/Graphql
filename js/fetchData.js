@@ -129,6 +129,15 @@ async function fetchProfile() {
                             name
                         }
                     }
+                    progressionSkill:user {
+                        transactions(where: {
+                        type: {_ilike: "%skill%"}
+                        }
+                    ) {
+                        type
+                        amount
+                    }
+                    }
                 }
                 `
             })
@@ -141,6 +150,21 @@ async function fetchProfile() {
             window.location.href = 'index.html';
             return;
         }
+        const userSkills = data.progressionSkill[0]?.transactions || [];
+        const skillnameAndAmount = getTopSkills(userSkills);
+        let arr = [];
+        let arrvalues = [];
+        for (let i = 0; i < skillnameAndAmount.length; i++) {
+            const capitalizedSkillName = skillnameAndAmount[i].name.charAt(0).toUpperCase() + skillnameAndAmount[i].name.slice(1);
+            arr.push(capitalizedSkillName);
+            arrvalues.push(skillnameAndAmount[i].amount)
+        }
+        const maxValue = Math.max(...arrvalues);
+        arrvalues = arrvalues.map(value => (value / maxValue) * 5);
+        console.log(arr)
+        console.log(arrvalues); 
+        drawSvgRadar(arr, arrvalues);
+
         if (data.currProgress.length) {
             const projectRecents = document.getElementById('currentProjects');
             const recentProject = document.createElement('div'); // Create a new div for each project
@@ -204,7 +228,6 @@ async function fetchProfile() {
             document.getElementById('audit2').textContent = downAudit.toFixed(0) + " KB";
 
         }
-        drawSvgRadar();
     } catch (error) {
         console.error('Error fetching profile:', error);
         window.location.href = 'index.html';
@@ -215,7 +238,6 @@ async function fetchProfile() {
 function drawGraphs(userInfo, auditUp, auditDown) {
     const svg1 = document.getElementById('graph1');
     const svg2 = document.getElementById('graph2');
-    // Sample SVG graph generation code
     if (auditUp > auditDown) {
         var test = auditDown / auditUp;
         test = 250 * test;
@@ -230,9 +252,9 @@ function drawGraphs(userInfo, auditUp, auditDown) {
     }
 }
 
-function drawSvgRadar() {
-    const data = [5, 3, 4, 2, 1]; // Values for each category (0-5)
-    const categories = ['A', 'B', 'C', 'D', 'E'];
+function drawSvgRadar(nameData, Pointdata) {
+    const data = Pointdata;
+    const categories = nameData;
     const numCategories = categories.length;
     const maxValue = 5;
     const radius = 100;
@@ -240,7 +262,6 @@ function drawSvgRadar() {
 
     const svg = d3.select('#radarChart');
 
-    // Draw the grid
     for (let r = 1; r <= maxValue; r++) {
         const points = [];
         for (let i = 0; i < numCategories; i++) {
@@ -253,7 +274,6 @@ function drawSvgRadar() {
             .attr('class', 'grid');
     }
 
-    // Draw the axes
     for (let i = 0; i < numCategories; i++) {
         const x = radius * Math.cos(angleSlice * i - Math.PI / 2);
         const y = radius * Math.sin(angleSlice * i - Math.PI / 2);
@@ -265,7 +285,6 @@ function drawSvgRadar() {
             .attr('stroke', '#ccc');
     }
 
-    // Draw the data area
     const dataPoints = data.map((value, i) => {
         const x = radius * (value / maxValue) * Math.cos(angleSlice * i - Math.PI / 2);
         const y = radius * (value / maxValue) * Math.sin(angleSlice * i - Math.PI / 2);
@@ -288,3 +307,25 @@ function logout() {
     localStorage.removeItem('jwt');
     window.location.href = 'index.html';
 }
+
+function getTopSkills(skills) {
+    const topSkills = skills.reduce((acc, skill) => {
+      const skillType = skill.type.split("_")[1]; // Extract the skill type from the key
+      // Check if the skill type exists in the accumulator
+      if (acc[skillType]) {
+        acc[skillType] += skill.amount;
+      } else {
+        acc[skillType] = skill.amount;
+      }
+      return acc;
+    }, {}); // Initialize the accumulator as an empty object
+  
+    // Convert the object into an array of { name: string; amount: number }
+    return (
+      Object.entries(topSkills)
+        // Sort the skills by amount in descending order
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 7)
+        .map(([name, amount]) => ({ name, amount })) // Map the key-value pairs to the desired format
+    );
+  }
