@@ -162,7 +162,7 @@ async function fetchProfile() {
         const maxValue = Math.max(...arrvalues);
         arrvalues = arrvalues.map(value => (value / maxValue) * 5);
         console.log(arr)
-        console.log(arrvalues); 
+        console.log(arrvalues);
         drawSvgRadar(arr, arrvalues);
 
         if (data.currProgress.length) {
@@ -310,22 +310,18 @@ function logout() {
 
 function getTopSkills(skills) {
     const topSkills = skills.reduce((acc, skill) => {
-      const skillType = skill.type.split("_")[1]; // Extract the skill type from the key
-      // Check if the skill type exists in the accumulator
-      if (acc[skillType]) {
-        acc[skillType] += skill.amount;
-      } else {
-        acc[skillType] = skill.amount;
-      }
-      return acc;
-    }, {}); // Initialize the accumulator as an empty object
-  
-    // Convert the object into an array of { name: string; amount: number }
+        const skillType = skill.type.split("_")[1];
+        if (acc[skillType]) {
+            acc[skillType] += skill.amount;
+        } else {
+            acc[skillType] = skill.amount;
+        }
+        return acc;
+    }, {});
     return (
-      Object.entries(topSkills)
-        // Sort the skills by amount in descending order
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 7)
-        .map(([name, amount]) => ({ name, amount })) // Map the key-value pairs to the desired format
+        Object.entries(topSkills)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 7)
+            .map(([name, amount]) => ({ name, amount }))
     );
-  }
+}
