@@ -161,8 +161,6 @@ async function fetchProfile() {
         }
         const maxValue = Math.max(...arrvalues);
         arrvalues = arrvalues.map(value => (value / maxValue) * 5);
-        console.log(arr)
-        console.log(arrvalues);
         drawSvgRadar(arr, arrvalues);
 
         if (data.currProgress.length) {
@@ -202,7 +200,7 @@ async function fetchProfile() {
         }
         document.getElementById('name').innerHTML = "Full Name: " + userInfo[0].attrs["firstName"] + " " + userInfo[0].attrs["lastName"];
         document.getElementById('email').innerHTML = "E-mail: " + userInfo[0].attrs["email"];
-
+        document.getElementById('phoneNum').innerHTML = "Phone Number: " + userInfo[0].attrs["Phone"];
         // var image = userInfo[0].attrs["id-cardUploadId"];
         var upAudit = userInfo[0].totalUp / 1000;
         var downAudit = userInfo[0].totalDown / 1000;
