@@ -238,14 +238,16 @@ function drawGraphs(userInfo, auditUp, auditDown) {
     const svg2 = document.getElementById('graph2');
     if (auditUp > auditDown) {
         var test = auditDown / auditUp;
-        test = 250 * test;
-        svg1.innerHTML = `<svg height="10" width="250" xmlns="http://www.w3.org/2000/svg" style="border: 1px solid white;border-radius:5px"><line x1="0" y1="10" x2="250" y2="10" style="stroke:cyan;stroke-width:200;"/></svg>`;
-        svg2.innerHTML = `<svg height="10" width="250" xmlns="http://www.w3.org/2000/svg" style="border: 1px solid white;border-radius:5px"><line x1="0" y1="10" x2="${test}" y2="10" style="stroke:white;stroke-width:200;"/></svg>`;
+        test = 100 * test;
+        console.log(test)
+        svg1.innerHTML = `<svg height="10" width="65%" xmlns="http://www.w3.org/2000/svg" style="border: 1px solid white;border-radius:5px"><line x1="0" y1="10" x2="100%" y2="10" style="stroke:cyan;stroke-width:200;"/></svg>`;
+        svg2.innerHTML = `<svg height="10" width="65%" xmlns="http://www.w3.org/2000/svg" style="border: 1px solid white;border-radius:5px"><line x1="0" y1="10" x2="${test}%" y2="10" style="stroke:white;stroke-width:200;"/></svg>`;
     } else {
         var test = auditUp / auditDown;
-        test = 250 * test;
-        svg1.innerHTML = `<svg height="10" width="250" xmlns="http://www.w3.org/2000/svg" style="border: 1px solid white;border-radius:5px"><line x1="0" y1="10" x2="${test}" y2="10" style="stroke:white;stroke-width:200;"/></svg>`;
-        svg2.innerHTML = `<svg height="10" width="250" xmlns="http://www.w3.org/2000/svg" style="border: 1px solid white;border-radius:5px"><line x1="0" y1="10" x2="250" y2="10" style="stroke:cyan;stroke-width:200;"/></svg>`;
+        test = 100 * test;
+        console.log(test)
+        svg1.innerHTML = `<svg height="10" width="65%" xmlns="http://www.w3.org/2000/svg" style="border: 1px solid white;border-radius:5px"><line x1="0" y1="10" x2="${test}%" y2="10" style="stroke:white;stroke-width:200;"/></svg>`;
+        svg2.innerHTML = `<svg height="10" width="65%" xmlns="http://www.w3.org/2000/svg" style="border: 1px solid white;border-radius:5px"><line x1="0" y1="10" x2="100%" y2="10" style="stroke:cyan;stroke-width:200;"/></svg>`;
 
     }
 }
