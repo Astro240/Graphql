@@ -1,14 +1,15 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    await fetchProfile();
+    await fetchProfile(); //call the function onload
 });
-
+//function to get the data and display
 async function fetchProfile() {
-    const token = localStorage.getItem('jwt');
+    const token = localStorage.getItem('jwt'); //get the token from the local storage
+    //if the token was invalid or empty then go back to index
     if (!token) {
         window.location.href = 'index.html';
         return;
     }
-
+    //try block to make sure there isnt an error
     try {
         const response = await fetch('https://learn.reboot01.com/api/graphql-engine/v1/graphql', {
             method: 'POST',
@@ -16,7 +17,7 @@ async function fetchProfile() {
                 'Authorization': 'Bearer ' + token,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
+            body: JSON.stringify({//query all the information needed from the user
                 query: `
                 {
                     user {
@@ -143,37 +144,40 @@ async function fetchProfile() {
             })
         });
 
-        const result = await response.json();
-        const data = result.data;
-        const userInfo = result.data.user;
+        const result = await response.json(); //result variable that has the json data
+        const data = result.data; //easier access to data
+        const userInfo = result.data.user; //userinfo to grab
+        //if there was no user logged in
         if (!userInfo.length) {
-            window.location.href = 'index.html';
+            window.location.href = 'index.html'; //redirect to login
             return;
         }
-        const userSkills = data.progressionSkill[0]?.transactions || [];
-        const skillnameAndAmount = getTopSkills(userSkills);
-        let arr = [];
-        let arrvalues = [];
+        const userSkills = data.progressionSkill[0]?.transactions || []; //user skills
+        const skillnameAndAmount = getTopSkills(userSkills); //this is to get the top 7 skills of the user
+        let arr = []; //empty array to input the names of the skills
+        let arrvalues = []; //empty array to input the value of the skills
         for (let i = 0; i < skillnameAndAmount.length; i++) {
-            const capitalizedSkillName = skillnameAndAmount[i].name.charAt(0).toUpperCase() + skillnameAndAmount[i].name.slice(1);
-            arr.push(capitalizedSkillName);
-            arrvalues.push(skillnameAndAmount[i].amount)
+            if (skillnameAndAmount[i].name.length >= 2) { //insurance for no error
+                const capitalizedSkillName = skillnameAndAmount[i].name.charAt(0).toUpperCase() + skillnameAndAmount[i].name.slice(1); //get the skill and 
+                arr.push(capitalizedSkillName);//push the name
+                arrvalues.push(skillnameAndAmount[i].amount) //push the amount
+            }
         }
-        const maxValue = Math.max(...arrvalues);
+        const maxValue = Math.max(...arrvalues); //get the max of the array value
         arrvalues = arrvalues.map(value => (value / maxValue) * 5);
-        drawSvgRadar(arr, arrvalues);
+        drawSvgRadar(arr, arrvalues);//draw the svg radar
 
         if (data.currProgress.length) {
             const projectRecents = document.getElementById('currentProjects');
-            const recentProject = document.createElement('div'); // Create a new div for each project
-            recentProject.textContent = data.currProgress[0].object.name; // Set the text
-            projectRecents.appendChild(recentProject); // Append the new div to the container
+            const recentProject = document.createElement('div');
+            recentProject.textContent = data.currProgress[0].object.name;
+            projectRecents.appendChild(recentProject);
         }
         for (var i = 0; i < data.recentProj.length; i++) {
             const projectRecents = document.getElementById('ProjectRecents');
-            const recentProject = document.createElement('div'); // Create a new div for each project
-            recentProject.textContent = (i + 1) + ". " + data.recentProj[i].object.name; // Set the text
-            projectRecents.appendChild(recentProject); // Append the new div to the container
+            const recentProject = document.createElement('div');
+            recentProject.textContent = (i + 1) + ". " + data.recentProj[i].object.name;
+            projectRecents.appendChild(recentProject);
         }
         document.getElementById('userInfo').textContent = `Welcome, ${userInfo[0].login}!`;
         document.getElementById('audits').textContent = userInfo[0].auditRatio.toFixed(1);
@@ -227,8 +231,8 @@ async function fetchProfile() {
 
         }
     } catch (error) {
-        console.error('Error fetching profile:', error);
-        window.location.href = 'index.html';
+        console.error('Error fetching profile:', error); //write the error onto the console
+        window.location.href = 'index.html'; //redirect to login page
         return;
     }
 }
