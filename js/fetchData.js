@@ -160,7 +160,7 @@ async function fetchProfile() {
             if (skillnameAndAmount[i].name.length >= 2) { //insurance for no error
                 const capitalizedSkillName = skillnameAndAmount[i].name.charAt(0).toUpperCase() + skillnameAndAmount[i].name.slice(1); //get the skill and 
                 arr.push(capitalizedSkillName);//push the name
-                arrvalues.push(skillnameAndAmount[i].amount) //push the amount
+                arrvalues.push(skillnameAndAmount[i].amount); //push the amount
             }
         }
         const maxValue = Math.max(...arrvalues); //get the max of the array value
