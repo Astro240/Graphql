@@ -1,8 +1,7 @@
 async function login() {
-    const email = document.getElementById('textInput').value;
-    const password = document.getElementById('passInput').value;
-    const errorDiv = document.getElementById('error');
-    const token = localStorage.getItem('jwt');
+    const email = document.getElementById('textInput').value; //get the input email/username
+    const password = document.getElementById('passInput').value; //get the input password
+    const errorDiv = document.getElementById('error'); //get the placeholder for the error
 
     try {
         const response = await fetch('https://learn.reboot01.com/api/auth/signin', {
