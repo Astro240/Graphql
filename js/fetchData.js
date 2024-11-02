@@ -322,19 +322,25 @@ function logout() {
 }
 
 function getTopSkills(skills) {
+    if (!Array.isArray(skills)) {
+        console.error("Expected an array of skills.");
+        return [];
+    }
     const topSkills = skills.reduce((acc, skill) => {
-        const skillType = skill.type.split("_")[1];
-        if (acc[skillType]) {
-            acc[skillType] += skill.amount;
-        } else {
-            acc[skillType] = skill.amount;
+        if (typeof skill === 'object' && skill !== null && 'type' in skill && 'amount' in skill) {
+            const skillType = skill.type.split("_")[1];
+            if (typeof skillType === 'string' && !isNaN(skill.amount)) {
+                if (acc[skillType]) {
+                    acc[skillType] += skill.amount;
+                } else {
+                    acc[skillType] = skill.amount;
+                }
+            }
         }
         return acc;
     }, {});
-    return (
-        Object.entries(topSkills)
-            .sort((a, b) => b[1] - a[1])
-            .slice(0, 7)
-            .map(([name, amount]) => ({ name, amount }))
-    );
+    const sortedSkills = Object.entries(topSkills).sort((a, b) => b[1] - a[1]);
+    return sortedSkills
+        .slice(0, Math.min(7, sortedSkills.length))
+        .map(([name, amount]) => ({ name, amount }));
 }
