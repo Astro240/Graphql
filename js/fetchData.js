@@ -209,7 +209,7 @@ async function fetchProfile() {
         // var image = userInfo[0].attrs["id-cardUploadId"];
         var upAudit = userInfo[0].totalUp / 1000;
         var downAudit = userInfo[0].totalDown / 1000;
-        
+
         drawGraphs(userInfo, upAudit, downAudit);
         var tfUp = false;
         var tfDown = false;
@@ -264,15 +264,31 @@ async function fetchProfile() {
         const getTheSecondQ = await getAudits.json(); //result variable that has the json data
         const Auditdata = getTheSecondQ.data.audit; //easier access to data
         console.log(Auditdata);
-        for(var i = 0; i < Auditdata.length;i++){
+        for (var i = 0; i < Auditdata.length; i++) {
             const projectRecents = document.getElementById('currentOrDoneAudits');
+            const dateString = Auditdata[i].createdAt;
+            const date = new Date(dateString);
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDate = date.toLocaleDateString('en-US', options);
+            console.log(formattedDate);
+            const dateDiv = document.createElement('div');
+            dateDiv.textContent = formattedDate;
+            projectRecents.appendChild(dateDiv);
+            const row = document.createElement('div');
+            row.style.display = 'flex'; // Use flexbox for horizontal alignment
+            row.style.alignItems = 'center'; // Center items vertically
+            row.style.justifyContent = 'space-between'; // Space out the items evenly
+            row.style.marginBottom = '10px'; // Add some space between rows
+            row.style.marginLeft = '35px';
+            row.style.marginRight = '35px';
             const recentProject = document.createElement('div');
-            recentProject.textContent = "Audit With "+Auditdata[i].group.captain["login"];
-            projectRecents.appendChild(recentProject);
-            const recentProject2 = document.createElement('div');
-            recentProject2.textContent = Auditdata[i].private["code"];;
+            recentProject.textContent = "Audit With " + Auditdata[i].group.captain["login"];
+            row.appendChild(recentProject);
+            const recentProject2 = document.createElement('button');
+            recentProject2.textContent = Auditdata[i].private["code"];
             recentProject2.classList.add('confirm');
-            projectRecents.appendChild(recentProject2);
+            row.appendChild(recentProject2);
+            projectRecents.appendChild(row);
         }
     } catch (error) {
         console.error('Error fetching profile:', error); //write the error onto the console
