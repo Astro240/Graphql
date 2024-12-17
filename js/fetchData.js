@@ -131,13 +131,14 @@ async function fetchProfile() {
                         }
                     }
                     progressionSkill:user {
-                        transactions(where: {
-                        type: {_ilike: "%skill%"}
-                        }
-                    ) {
-                        type
-                        amount
-                    }
+                        transactions(
+				where: {type: {_like: "skill_%"}}
+				distinct_on: type
+				order_by: [{type: asc}, {amount: desc}]
+				) {
+					type
+					amount
+				}
                     }
                 }
                 `
@@ -146,6 +147,7 @@ async function fetchProfile() {
 
         const result = await response.json(); //result variable that has the json data
         const data = result.data; //easier access to data
+        const id = data.user[0].id;
         const userInfo = result.data.user; //userinfo to grab
         //if there was no user logged in
         if (!userInfo.length) {
@@ -163,8 +165,7 @@ async function fetchProfile() {
                 arrvalues.push(skillnameAndAmount[i].amount); //push the amount
             }
         }
-        const maxValue = Math.max(...arrvalues); //get the max of the array value
-        arrvalues = arrvalues.map(value => (value / maxValue) * 5);
+        arrvalues = arrvalues.map(value => (value / 100) * 5);
         drawSvgRadar(arr, arrvalues);//draw the svg radar
 
         if (data.currProgress.length) {
@@ -208,6 +209,7 @@ async function fetchProfile() {
         // var image = userInfo[0].attrs["id-cardUploadId"];
         var upAudit = userInfo[0].totalUp / 1000;
         var downAudit = userInfo[0].totalDown / 1000;
+        
         drawGraphs(userInfo, upAudit, downAudit);
         var tfUp = false;
         var tfDown = false;
@@ -229,6 +231,48 @@ async function fetchProfile() {
         } else {
             document.getElementById('audit2').textContent = downAudit.toFixed(0) + " KB";
 
+        }
+        const getAudits = await fetch('https://learn.reboot01.com/api/graphql-engine/v1/graphql', {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({//query all the information needed from the user
+                query: `
+                {
+                    audit(where: {auditor: {id: {_eq:${id}}}private: { code: { _is_null: false },}},order_by: {id: desc},limit:5){
+                    createdAt
+				    auditedAt
+				    group {
+					    path
+					    captain {
+						    id
+						    firstName
+						    lastName
+						    login
+					    }
+				    }
+				    private{
+					    code
+				        }
+                    }
+                }
+                `
+            })
+        });
+        const getTheSecondQ = await getAudits.json(); //result variable that has the json data
+        const Auditdata = getTheSecondQ.data.audit; //easier access to data
+        console.log(Auditdata);
+        for(var i = 0; i < Auditdata.length;i++){
+            const projectRecents = document.getElementById('currentOrDoneAudits');
+            const recentProject = document.createElement('div');
+            recentProject.textContent = "Audit With "+Auditdata[i].group.captain["login"];
+            projectRecents.appendChild(recentProject);
+            const recentProject2 = document.createElement('div');
+            recentProject2.textContent = Auditdata[i].private["code"];;
+            recentProject2.classList.add('confirm');
+            projectRecents.appendChild(recentProject2);
         }
     } catch (error) {
         console.error('Error fetching profile:', error); //write the error onto the console
@@ -341,6 +385,6 @@ function getTopSkills(skills) {
     }, {});
     const sortedSkills = Object.entries(topSkills).sort((a, b) => b[1] - a[1]);
     return sortedSkills
-        .slice(0, Math.min(7, sortedSkills.length))
+        .slice(0, Math.min(6, sortedSkills.length))
         .map(([name, amount]) => ({ name, amount }));
 }
