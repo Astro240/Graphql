@@ -270,7 +270,6 @@ async function fetchProfile() {
             const date = new Date(dateString);
             const options = { year: 'numeric', month: 'long', day: 'numeric' };
             const formattedDate = date.toLocaleDateString('en-US', options);
-            console.log(formattedDate);
             const dateDiv = document.createElement('div');
             dateDiv.textContent = formattedDate;
             projectRecents.appendChild(dateDiv);
