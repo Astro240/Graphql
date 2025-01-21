@@ -376,7 +376,7 @@ function drawSvgRadar(nameData, Pointdata) {
     });
 }
 function logout() {
-    localStorage.removeItem('jwt');
+    sessionStorage.removeItem('jwt');
     window.location.href = 'index.html';
 }
 
