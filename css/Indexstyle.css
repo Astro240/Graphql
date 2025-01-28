@@ -122,6 +122,6 @@ body {
 
 @media screen and (max-width: 600) {
     .signUpTest {
-        width: 300px;
+        width: 75%;
     }
 }
