@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 //function to get the data and display
 async function fetchProfile() {
-    const token = localStorage.getItem('jwt'); //get the token from the local storage
+    const token = sessionStorage.getItem('jwt'); //get the token from the local storage
     //if the token was invalid or empty then go back to index
     if (!token) {
         window.location.href = 'index.html';
@@ -376,7 +376,7 @@ function drawSvgRadar(nameData, Pointdata) {
     });
 }
 function logout() {
-    localStorage.removeItem('jwt');
+    sessionStorage.removeItem('jwt');
     window.location.href = 'index.html';
 }
 
