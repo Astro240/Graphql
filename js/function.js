@@ -17,7 +17,7 @@ async function login() {
         }
 
         const data = await response.json();//get the jwt token from the response
-        sessionStorage.setItem('jwt', data); //insert into the local storage
+        localStorage.setItem('jwt', data); //insert into the local storage
         window.location.href = 'profile.html'; // Redirect to profile page
     } catch (error) {
         errorDiv.textContent = error.message; //show error message to user
