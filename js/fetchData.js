@@ -173,7 +173,12 @@ async function fetchProfile() {
             const recentProject = document.createElement('div');
             recentProject.textContent = data.currProgress[0].object.name;
             projectRecents.appendChild(recentProject);
-        }
+        }else{
+	    const projectRecents = document.getElementById('currentProjects');
+            const recentProject = document.createElement('div');
+            recentProject.textContent = "None";
+            projectRecents.appendChild(recentProject);
+	}
         for (var i = 0; i < data.recentProj.length; i++) {
             const projectRecents = document.getElementById('ProjectRecents');
             const recentProject = document.createElement('div');
